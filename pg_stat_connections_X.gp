@@ -1,24 +1,11 @@
-# pgcluu CSV separator
-set datafile sep ';'
+# load common config
+load 'common.gp'
 
-# pgcluu time format
-set xdata time
-set timefmt "%Y-%m-%d %H:%M:%S"
+# specific config
 set yrange [0:]
+unset format y
 
-# Style
-set style line 100 lt 1 lc rgb "grey" lw 0.5
-set style line 101 lw 2 lt rgb "#77bc65"
-set style line 102 lw 2 lt rgb "#ff972f"
-set style line 103 lw 2 lt rgb "#a1467e"
-set style line 104 lw 2 lt rgb "#e16173"
-
-# Graph 1: par statut
-set grid ls 100
-set format x "%H:%M"
-set xtics rotate
-set key outside center bottom horizontal
-set terminal pngcairo size 600,400 enhanced font 'Segoe UI,10'
+# graph 1: per status
 set title 'Connections per status for '.db
 set output 'gnuplot_png/'.db.'/pg_stat_connections_perstatus.png'
 plot 'gnuplot_csv/pg_stat_connections_'.db.'.csv' using 1:3 title 'Active' with lines ls 101 \
@@ -26,7 +13,7 @@ plot 'gnuplot_csv/pg_stat_connections_'.db.'.csv' using 1:3 title 'Active' with 
    , '' using 1:($2-$3-$4-$5) title 'Idle' with lines ls 103 \
    , '' using 1:5 title 'Idle in transaction' with lines ls 104
 
-# Graph 2: total
+# graph 2: total
 set nokey
 set title 'Total connections for '.db
 set output 'gnuplot_png/'.db.'/pg_stat_connections_total.png'
