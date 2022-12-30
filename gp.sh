@@ -40,3 +40,12 @@ do
   gnuplot -e "db='$db'" pg_stat_connections_X.gp
 done
 
+# ---------- Database stats
+echo "Building database stats graph"
+awk -F";" '{ print $3 }' $PCDIR/pg_stat_database.csv | sort | uniq | while read db
+do
+  test -d $PNGDIR/$db || mkdir -p $PNGDIR/$db
+  grep $db $PCDIR/pg_stat_database.csv > $GPDIR/pg_stat_database_${db}.csv
+  gnuplot -e "db='$db'" pg_stat_database_X.gp
+done
+
