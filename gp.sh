@@ -16,6 +16,7 @@ gnuplot commit_memory.gp
 echo "Building database size graph"
 awk -F";" '{ print $3 }' $PCDIR/pg_database_size.csv | sort | uniq | while read db
 do
+  test -d $PNGDIR/$db || mkdir -p $PNGDIR/$db
   grep $db $PCDIR/pg_database_size.csv > $GPDIR/pg_database_${db}_size.csv
   gnuplot -e "db='$db'" pg_database_X_size.gp
 done
@@ -34,6 +35,7 @@ gnuplot pg_stat_bgwriter.gp
 echo "Building connections graph"
 awk -F";" '{ print $6 }' $PCDIR/pg_stat_connections.csv | sort | uniq | while read db
 do
+  test -d $PNGDIR/$db || mkdir -p $PNGDIR/$db
   grep $db $PCDIR/pg_stat_connections.csv > $GPDIR/pg_stat_connections_${db}.csv
   gnuplot -e "db='$db'" pg_stat_connections_X.gp
 done

@@ -20,7 +20,7 @@ set xtics rotate
 set key outside center bottom horizontal
 set terminal pngcairo size 600,400 enhanced font 'Segoe UI,10'
 set title 'Connections per status for '.db
-set output 'gnuplot_png/pg_stat_connections_'.db.'_parstatut.png'
+set output 'gnuplot_png/'.db.'/pg_stat_connections_perstatus.png'
 plot 'gnuplot_csv/pg_stat_connections_'.db.'.csv' using 1:3 title 'Active' with lines ls 101 \
    , '' using 1:4 title 'Waiting for a lock' with lines ls 102 \
    , '' using 1:($2-$3-$4-$5) title 'Idle' with lines ls 103 \
@@ -29,5 +29,5 @@ plot 'gnuplot_csv/pg_stat_connections_'.db.'.csv' using 1:3 title 'Active' with 
 # Graph 2: total
 set nokey
 set title 'Total connections for '.db
-set output 'gnuplot_png/pg_stat_connections_'.db.'_total.png'
+set output 'gnuplot_png/'.db.'/pg_stat_connections_total.png'
 plot 'gnuplot_csv/pg_stat_connections_'.db.'.csv' using 1:2 with lines ls 101

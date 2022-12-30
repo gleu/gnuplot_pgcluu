@@ -21,5 +21,5 @@ set xtics rotate
 set nokey
 set terminal pngcairo size 600,400 enhanced font 'Segoe UI,10'
 set title 'Database '.db
-set output 'gnuplot_png/pg_database_'.db.'_size.png'
+set output 'gnuplot_png/'.db.'/pg_database_size.png'
 plot 'gnuplot_csv/pg_database_'.db.'_size.csv' using 1:4 with lines ls 101
