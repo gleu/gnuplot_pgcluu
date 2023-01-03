@@ -58,3 +58,8 @@ do
   gnuplot -e "db='$db'" pg_stat_locks_X.gp
 done
 
+# ---------- XLOG stats
+echo "Building xlog graph"
+cp $PCDIR/pg_xlog_stat.csv $GPDIR
+gnuplot pg_xlog_stat.gp
+
