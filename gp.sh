@@ -12,8 +12,39 @@ echo "Building commit memory graph"
 cp $PCDIR/commit_memory.csv $GPDIR
 gnuplot commit_memory.gp
 
-# ---------- Database size
-echo "Building database size graph"
+# ---------- Database size (all)
+echo "Building database size graph (all)"
+NB=$(awk -F ";" '{ print $3} ' $PCDIR/pg_database_size.csv | sort -u | wc -l)
+awk -F ";" '
+    {
+      pivot[$1][$3]=$4;
+      db[$3]=1;
+    }
+END {
+      # print header
+      line="date";
+      for (y in db)
+      {
+           line=line";"y;
+      }
+      print line;
+
+      # print items
+      for (x in pivot)
+      {
+        line=x;
+        for (y in db)
+        {
+           line=line";"pivot[x][y];
+        }
+        print line;
+      }
+    }
+' $PCDIR/pg_database_size.csv > $GPDIR/pg_database_size.csv
+gnuplot -e "nb=$NB" pg_database_size.gp
+
+# ---------- Database size (each)
+echo "Building database size graph (each)"
 awk -F";" '{ print $3 }' $PCDIR/pg_database_size.csv | sort -u | while read db
 do
   test -d $PNGDIR/$db || mkdir -p $PNGDIR/$db
