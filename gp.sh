@@ -14,7 +14,7 @@ gnuplot commit_memory.gp
 
 # ---------- Database size (all)
 echo "Building database size graph (all)"
-NB=$(awk -F ";" '{ print $3} ' $PCDIR/pg_database_size.csv | sort -u | wc -l)
+NB=$(awk -F ";" '{ x[$3] = 1 } END { print length(x) }' $PCDIR/pg_database_size.csv)
 awk -F ";" '
     {
       pivot[$1][$3]=$4;
@@ -96,7 +96,7 @@ gnuplot pg_xlog_stat.gp
 
 # ---------- Tablespace size
 echo "Building tablespace size graph"
-NB=$(awk -F ";" '{ print $2} ' $PCDIR/pg_tablespace_size.csv | sort -u | wc -l)
+NB=$(awk -F ";" '{ x[$2] = 1 } END { print length(x) }' $PCDIR/pg_tablespace_size.csv)
 awk -F ";" '
     {
       pivot[$1][$2]=$3;
