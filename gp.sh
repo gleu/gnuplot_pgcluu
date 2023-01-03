@@ -63,3 +63,33 @@ echo "Building xlog graph"
 cp $PCDIR/pg_xlog_stat.csv $GPDIR
 gnuplot pg_xlog_stat.gp
 
+# ---------- Tablespace size
+echo "Building tablespace size graph"
+NB=$(awk -F ";" '{ print $2} ' $PCDIR/pg_tablespace_size.csv | sort -u | wc -l)
+awk -F ";" '
+    {
+      pivot[$1][$2]=$3;
+      tbs[$2]=1;
+    }
+END {
+      # print header
+      line="date";
+      for (y in tbs)
+      {
+           line=line";"y;
+      }
+      print line;
+
+      # print items
+      for (x in pivot)
+      {
+        line=x;
+        for (y in tbs)
+        {
+           line=line";"pivot[x][y];
+        }
+        print line;
+      }
+    }
+' $PCDIR/pg_tablespace_size.csv > $GPDIR/pg_tablespace_size.csv
+gnuplot -e "nb=$NB" pg_tablespace_size.gp
