@@ -14,7 +14,7 @@ gnuplot commit_memory.gp
 
 # ---------- Database size
 echo "Building database size graph"
-awk -F";" '{ print $3 }' $PCDIR/pg_database_size.csv | sort | uniq | while read db
+awk -F";" '{ print $3 }' $PCDIR/pg_database_size.csv | sort -u | while read db
 do
   test -d $PNGDIR/$db || mkdir -p $PNGDIR/$db
   grep $db $PCDIR/pg_database_size.csv > $GPDIR/pg_database_${db}_size.csv
@@ -33,7 +33,7 @@ gnuplot pg_stat_bgwriter.gp
 
 # ---------- Connections
 echo "Building connections graph"
-awk -F";" '{ print $6 }' $PCDIR/pg_stat_connections.csv | sort | uniq | while read db
+awk -F";" '{ print $6 }' $PCDIR/pg_stat_connections.csv | sort -u | while read db
 do
   test -d $PNGDIR/$db || mkdir -p $PNGDIR/$db
   grep $db $PCDIR/pg_stat_connections.csv > $GPDIR/pg_stat_connections_${db}.csv
@@ -42,7 +42,7 @@ done
 
 # ---------- Database stats
 echo "Building database stats graph"
-awk -F";" '{ print $3 }' $PCDIR/pg_stat_database.csv | sort | uniq | while read db
+awk -F";" '{ print $3 }' $PCDIR/pg_stat_database.csv | sort -u | while read db
 do
   test -d $PNGDIR/$db || mkdir -p $PNGDIR/$db
   grep $db $PCDIR/pg_stat_database.csv > $GPDIR/pg_stat_database_${db}.csv
@@ -51,7 +51,7 @@ done
 
 # ---------- Locks stats
 echo "Building locks stats graph"
-awk -F";" '{ print $2 }' $PCDIR/pg_stat_locks.csv | sort | uniq | while read db
+awk -F";" '{ print $2 }' $PCDIR/pg_stat_locks.csv | sort -u | while read db
 do
   test -d $PNGDIR/$db || mkdir -p $PNGDIR/$db
   grep "$db;lock_granted;" $PCDIR/pg_stat_locks.csv > $GPDIR/pg_stat_locks_${db}.csv
