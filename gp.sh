@@ -49,3 +49,12 @@ do
   gnuplot -e "db='$db'" pg_stat_database_X.gp
 done
 
+# ---------- Locks stats
+echo "Building locks stats graph"
+awk -F";" '{ print $2 }' $PCDIR/pg_stat_locks.csv | sort | uniq | while read db
+do
+  test -d $PNGDIR/$db || mkdir -p $PNGDIR/$db
+  grep "$db;lock_granted;" $PCDIR/pg_stat_locks.csv > $GPDIR/pg_stat_locks_${db}.csv
+  gnuplot -e "db='$db'" pg_stat_locks_X.gp
+done
+
