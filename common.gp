@@ -22,7 +22,7 @@ set format x "%H:%M"
 set format y "%.0s %co"
 set xtics rotate
 set key outside center bottom horizontal
-set terminal pngcairo size 600,400 enhanced font 'Segoe UI,10'
+set terminal pngcairo size 600,400 noenhanced font 'Segoe UI,10'
 
 # various switch functions
 # useful because of the cumulative nature of the PostgreSQL metrics
