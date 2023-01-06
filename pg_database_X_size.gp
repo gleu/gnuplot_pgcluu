@@ -7,5 +7,5 @@ set nokey
 
 # graph 1
 set title 'Database '.db
-set output 'gnuplot_png/'.db.'/pg_database_size.png'
-plot 'gnuplot_csv/pg_database_'.db.'_size.csv' using 1:4 with lines ls 101
+set output png_filename_root.'.png'
+plot csv_filename_root.'.csv' using 1:4 with lines ls 101

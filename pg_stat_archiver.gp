@@ -7,6 +7,6 @@ unset format y
 
 # graph 1
 set title 'Archiver'
-set output 'gnuplot_png/pg_stat_archiver.png'
-plot 'pgcluu_csv/pg_stat_archiver.csv' using 1:2 title 'Success' with lines ls 101 \
-   , ''                                using 1:5 title 'Failure' with lines ls 102
+set output png_filename_root.'.png'
+plot csv_filename_root.'.csv' using 1:2 title 'Success' with lines ls 101 \
+   , ''                       using 1:5 title 'Failure' with lines ls 102
