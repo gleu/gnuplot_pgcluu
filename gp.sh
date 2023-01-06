@@ -15,6 +15,15 @@ Help()
    echo "https://github.com/gleu/gnuplot_pgcluu"
 }
 
+msg_verbose() {
+  test -n "$VERBOSE" && echo "$*"
+}
+
+msg_error() {
+  echo "ERROR: $*"
+}
+
+
 # get values from env or set default
 test -z "$PCDIR" && PCDIR="pgcluu_csv"
 test -z "$GPDIR" && GPDIR="gnuplot_csv"
@@ -43,13 +52,11 @@ done
 test -d "$GPDIR" || mkdir -p "$GPDIR"
 test -d "$PNGDIR" || mkdir -p "$PNGDIR"
 
-if test -n "$VERBOSE" ; then
-  echo "Script directories:"
-  echo "* Input directory for pgcluu's csv: $PCDIR"
-  echo "* Work direcotry for gluplots's csv: $GPDIR"
-  echo "* Output directory for gnuplot's png: $PNGDIR"
-  echo
-fi
+msg_verbose "Script directories:"
+msg_verbose "* Input directory for pgcluu's csv: $PCDIR"
+msg_verbose "* Work direcotry for gluplots's csv: $GPDIR"
+msg_verbose "* Output directory for gnuplot's png: $PNGDIR"
+msg_verbose
 
 # ---------- Commit Memory
 echo "Building commit memory graph"
@@ -90,12 +97,13 @@ END {
 gnuplot -e "csv_filename_root='$GPDIR/pg_database_size'" \
         -e "png_filename_root='$PNGDIR/pg_database_size'" \
         -e "nb=$NB" \
-	pg_database_size.gp
+        pg_database_size.gp
 
 # ---------- Database size (each)
 echo "Building database size graph (each)"
 awk -F";" '{ print $3 }' $PCDIR/pg_database_size.csv | sort -u | while read db
 do
+  msg_verbose "= Building database size graph for $db"
   test -d $PNGDIR/$db || mkdir -p $PNGDIR/$db
   grep $db $PCDIR/pg_database_size.csv > $GPDIR/pg_database_${db}_size.csv
   gnuplot -e "csv_filename_root='$GPDIR/pg_database_${db}_size'" \
@@ -121,18 +129,20 @@ gnuplot -e "csv_filename_root='$GPDIR/pg_stat_bgwriter'" \
 echo "Building connections graph"
 awk -F";" '{ print $6 }' $PCDIR/pg_stat_connections.csv | sort -u | while read db
 do
+  msg_verbose "= Building connections graph for $db"
   test -d $PNGDIR/$db || mkdir -p $PNGDIR/$db
   grep $db $PCDIR/pg_stat_connections.csv > $GPDIR/pg_stat_connections_${db}.csv
   gnuplot -e "csv_filename_root='$GPDIR/pg_stat_connections_${db}'" \
           -e "png_filename_root='$PNGDIR/${db}/pg_stat_connections'" \
           -e "db='$db'" \
-	  pg_stat_connections_X.gp
+          pg_stat_connections_X.gp
 done
 
 # ---------- Database stats
 echo "Building database stats graph"
 awk -F";" '{ print $3 }' $PCDIR/pg_stat_database.csv | sort -u | while read db
 do
+  msg_verbose "= Building database stats graph for $db"
   test -d $PNGDIR/$db || mkdir -p $PNGDIR/$db
   grep $db $PCDIR/pg_stat_database.csv > $GPDIR/pg_stat_database_${db}.csv
   gnuplot -e "csv_filename_root='$GPDIR/pg_stat_database_${db}'" \
@@ -144,6 +154,7 @@ done
 echo "Building locks stats graph"
 awk -F";" '{ print $2 }' $PCDIR/pg_stat_locks.csv | sort -u | while read db
 do
+  msg_verbose "= Building locks stats graph for $db"
   test -d $PNGDIR/$db || mkdir -p $PNGDIR/$db
   grep "$db;lock_granted;" $PCDIR/pg_stat_locks.csv > $GPDIR/pg_stat_locks_${db}.csv
   gnuplot -e "csv_filename_root='$GPDIR/pg_stat_locks_${db}'" \
