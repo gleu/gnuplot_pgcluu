@@ -23,6 +23,12 @@ msg_error() {
   echo "ERROR: $*"
 }
 
+msg_fatal() {
+  echo "FATAL: $*"
+  exit 1
+}
+
+which gnuplot >/dev/null 2>&1 || msg_fatal "gnuplot could not be found"
 
 # get values from env or set default
 test -z "$PCDIR" && PCDIR="pgcluu_csv"
@@ -45,18 +51,19 @@ while getopts "i:w:o:hv" option; do
          exit;;
       *)
          Help
-         exit;;
+         exit 2;;
    esac
 done
-
-test -d "$GPDIR" || mkdir -p "$GPDIR"
-test -d "$PNGDIR" || mkdir -p "$PNGDIR"
 
 msg_verbose "Script directories:"
 msg_verbose "* Input directory for pgcluu's csv: $PCDIR"
 msg_verbose "* Work direcotry for gluplots's csv: $GPDIR"
 msg_verbose "* Output directory for gnuplot's png: $PNGDIR"
 msg_verbose
+
+test -d "$PCDIR" || msg_fatal "input dir ${PCDIR} is missing"
+test -d "$GPDIR" || mkdir -p "$GPDIR"
+test -d "$PNGDIR" || mkdir -p "$PNGDIR"
 
 # ---------- Commit Memory
 echo "Building commit memory graph"
